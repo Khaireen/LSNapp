@@ -12,6 +12,10 @@ import {
   MatTableDataSource
 } from '@angular/material/table';
 import {
+  MatDialog,
+  MatDialogConfig
+} from '@angular/material/dialog';
+import {
   User
 } from '../models/User.interface';
 import {
@@ -23,6 +27,15 @@ import {
 import {
   USER_ROLE
 } from '../models/UserRole';
+import {
+  AddUserDialogComponent
+} from '../dialogs/add-user-dialog/add-user-dialog.component';
+import {
+  EditUserDialogComponent
+} from '../dialogs/edit-user-dialog/edit-user-dialog.component';
+import {
+  DeleteUserDialogComponent
+} from '../dialogs/delete-user-dialog/delete-user-dialog.component';
 
 
 @Component({
@@ -51,7 +64,7 @@ export class TableComponent implements OnInit {
     static: true
   }) sort: MatSort;
 
-  constructor() {
+  constructor(public dialog: MatDialog) {
     const usersData = [{
         id: 1,
         firstName: 'Leanne',
@@ -127,15 +140,26 @@ export class TableComponent implements OnInit {
     }
   }
 
-  public openEditUserDialog(row: object): void {
-    console.log('modify', row);
+  public openEditUserDialog(user: object): void {
+    console.log('modify', user);
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.data = user;
+    const editUserDialogRef = this.dialog.open(EditUserDialogComponent, dialogConfig);
+
+    editUserDialogRef.afterClosed().subscribe(result => console.log('modify dialog result', result));
+
   }
 
   public openDeleteUserDialog(id: number): void {
     console.log('delete', id);
+    const deleteUserDialogRef = this.dialog.open(DeleteUserDialogComponent);
+    deleteUserDialogRef.afterClosed().subscribe(result => console.log('delete user dialog', result));
   }
 
   public openAddUserDialog(): void {
     console.log('add');
+    const addUserDialogRef = this.dialog.open(AddUserDialogComponent);
+    addUserDialogRef.afterClosed().subscribe(result => console.log('add user dialog', result));
   }
 }

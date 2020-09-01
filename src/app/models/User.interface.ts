@@ -8,5 +8,5 @@ export interface User {
   firstName: string;
   lastName: string;
   role: USER_ROLE;
-  enabled: boolean;
+  enabled?: boolean;
 }

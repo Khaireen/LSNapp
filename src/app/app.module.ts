@@ -38,12 +38,30 @@ import {
 import {
   MatIconModule
 } from '@angular/material/icon';
-import { MatSelectModule } from '@angular/material/select';
+import {
+  MatDialogModule
+} from '@angular/material/dialog';
+import {
+  MatSelectModule
+} from '@angular/material/select';
+import {
+  AddUserDialogComponent
+} from './dialogs/add-user-dialog/add-user-dialog.component';
+import {
+  EditUserDialogComponent
+} from './dialogs/edit-user-dialog/edit-user-dialog.component';
+import {
+  DeleteUserDialogComponent
+} from './dialogs/delete-user-dialog/delete-user-dialog.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
     AppComponent,
-    TableComponent
+    TableComponent,
+    AddUserDialogComponent,
+    EditUserDialogComponent,
+    DeleteUserDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -56,7 +74,9 @@ import { MatSelectModule } from '@angular/material/select';
     MatSortModule,
     MatButtonModule,
     MatIconModule,
-    MatSelectModule
+    MatSelectModule,
+    MatDialogModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
