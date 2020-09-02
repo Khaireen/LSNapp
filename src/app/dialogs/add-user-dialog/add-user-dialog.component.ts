@@ -10,9 +10,6 @@ import {
   MatDialogRef
 } from '@angular/material/dialog';
 import {
-  EditUserDialogComponent
-} from '../edit-user-dialog/edit-user-dialog.component';
-import {
   USER_ROLE
 } from 'src/app/models/UserRole';
 import {
@@ -37,7 +34,7 @@ export class AddUserDialogComponent implements OnInit {
     }
   ];
 
-  constructor(private fb: FormBuilder, private dialogRef: MatDialogRef < EditUserDialogComponent > ) {}
+  constructor(private fb: FormBuilder, private dialogRef: MatDialogRef < AddUserDialogComponent > ) {}
   ngOnInit(): void {
     this.form = this.fb.group({
       id: this.createNewId(),
