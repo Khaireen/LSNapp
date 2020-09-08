@@ -9,7 +9,8 @@ import {
   MatSort
 } from '@angular/material/sort';
 import {
-  MatTableDataSource
+  MatTableDataSource,
+  MatTable
 } from '@angular/material/table';
 import {
   MatDialog,
@@ -25,9 +26,6 @@ import {
   OnInit
 } from '@angular/core';
 import {
-  USER_ROLE
-} from '../models/UserRole';
-import {
   AddUserDialogComponent
 } from '../dialogs/add-user-dialog/add-user-dialog.component';
 import {
@@ -36,6 +34,9 @@ import {
 import {
   DeleteUserDialogComponent
 } from '../dialogs/delete-user-dialog/delete-user-dialog.component';
+import {
+  UserDataService
+} from '../services/user-data.service';
 
 
 @Component({
@@ -45,7 +46,7 @@ import {
 })
 
 export class TableComponent implements OnInit {
-  displayedColumns: string[] = ['id', 'username', 'firstName', 'lastName', 'role', 'actions'];
+  displayedColumns: string[] = ['enabled', 'username', 'firstName', 'lastName', 'role', 'actions'];
   dataSource: MatTableDataSource < User > ;
   roles: Roles[] = [{
       value: 'admin',
@@ -56,6 +57,7 @@ export class TableComponent implements OnInit {
       viewValue: 'user'
     }
   ];
+  usersData: User[];
 
   @ViewChild(MatPaginator, {
     static: true
@@ -63,72 +65,12 @@ export class TableComponent implements OnInit {
   @ViewChild(MatSort, {
     static: true
   }) sort: MatSort;
+  @ViewChild(MatTable) table: MatTable < any > ;
 
-  constructor(public dialog: MatDialog) {
-    const usersData = [{
-        id: 1,
-        firstName: 'Leanne',
-        lastName: 'Graham',
-        username: 'Bret',
-        role: USER_ROLE.ADMIN,
-        enabled: true
-      },
-      {
-        id: 2,
-        firstName: 'Ervin',
-        lastName: 'Howell',
-        username: 'Antonette',
-        role: USER_ROLE.USER,
-        enabled: false
-      },
-      {
-        id: 3,
-        firstName: 'Ervin',
-        lastName: 'Howell',
-        username: 'Antonette',
-        role: USER_ROLE.USER,
-        enabled: false
-      },
-      {
-        id: 4,
-        firstName: 'Ervin',
-        lastName: 'Howell',
-        username: 'Antonette',
-        role: USER_ROLE.USER,
-        enabled: false
-      },
-      {
-        id: 5,
-        firstName: 'Ervin',
-        lastName: 'Howell',
-        username: 'Antonette',
-        role: USER_ROLE.USER,
-        enabled: false
-      },
-      {
-        id: 6,
-        firstName: 'Ervin',
-        lastName: 'Howell',
-        username: 'Antonette',
-        role: USER_ROLE.USER,
-        enabled: false
-      },
-      {
-        id: 7,
-        firstName: 'Ervin',
-        lastName: 'Howell',
-        username: 'Antonette',
-        role: USER_ROLE.USER,
-        enabled: false
-      },
-    ];
-    this.dataSource = new MatTableDataSource(usersData);
-    console.log(this.dataSource);
-  }
+  constructor(public dialog: MatDialog, private userDataService: UserDataService) {}
 
   ngOnInit(): void {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    this.getUsers();
   }
 
   applyFilter(event: Event): void {
@@ -140,26 +82,56 @@ export class TableComponent implements OnInit {
     }
   }
 
-  public openEditUserDialog(user: object): void {
-    console.log('modify', user);
+  editUser(user: object): void {
     const dialogConfig = new MatDialogConfig();
-
     dialogConfig.data = user;
     const editUserDialogRef = this.dialog.open(EditUserDialogComponent, dialogConfig);
-
-    editUserDialogRef.afterClosed().subscribe(result => console.log('modify dialog result', result));
-
+    editUserDialogRef.afterClosed().subscribe(result => {
+      this.userDataService.editUser(result);
+      this.refresh();
+    });
   }
 
-  public openDeleteUserDialog(id: number): void {
-    console.log('delete', id);
-    const deleteUserDialogRef = this.dialog.open(DeleteUserDialogComponent);
-    deleteUserDialogRef.afterClosed().subscribe(result => console.log('delete user dialog', result));
+  deleteUser(id: number): void {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.data = id;
+    const deleteUserDialogRef = this.dialog.open(DeleteUserDialogComponent, dialogConfig);
+    deleteUserDialogRef.afterClosed().subscribe(result => {
+      this.userDataService.deleteUser(result);
+      this.refresh();
+    });
   }
 
-  public openAddUserDialog(): void {
-    console.log('add');
+  addUser(): void {
     const addUserDialogRef = this.dialog.open(AddUserDialogComponent);
-    addUserDialogRef.afterClosed().subscribe(result => console.log('add user dialog', result));
+    addUserDialogRef.afterClosed().subscribe(result => {
+      this.userDataService.addUser(result);
+      this.refresh();
+    });
+  }
+
+  // prepares table to render
+  setTable(users: User[]): void {
+    this.dataSource = new MatTableDataSource(users);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
+  // fetches array of users from service
+  getUsers(): void {
+    this.userDataService.getUsers()
+      .then(response => {
+        this.usersData = response;
+        this.setTable(this.usersData);
+      })
+      .catch(error => alert(error));
+  }
+
+  // reloads table with new data
+  private refresh(): void {
+    this.dataSource = new MatTableDataSource(this.usersData);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.table.renderRows();
   }
 }

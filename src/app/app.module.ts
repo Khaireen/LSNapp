@@ -1,22 +1,21 @@
+// Angular modules
 import {
   BrowserModule
 } from '@angular/platform-browser';
 import {
   NgModule
 } from '@angular/core';
-
-import {
-  AppRoutingModule
-} from './app-routing.module';
-import {
-  AppComponent
-} from './app.component';
 import {
   BrowserAnimationsModule
 } from '@angular/platform-browser/animations';
 import {
-  TableComponent
-} from './table/table.component';
+  ReactiveFormsModule, FormsModule
+} from '@angular/forms';
+import {
+  AppRoutingModule
+} from './app-routing.module';
+
+// Material
 import {
   MatTableModule
 } from '@angular/material/table';
@@ -45,6 +44,17 @@ import {
   MatSelectModule
 } from '@angular/material/select';
 import {
+  MatCheckboxModule
+} from '@angular/material/checkbox';
+
+// Components
+import {
+  AppComponent
+} from './app.component';
+import {
+  TableComponent
+} from './table/table.component';
+import {
   AddUserDialogComponent
 } from './dialogs/add-user-dialog/add-user-dialog.component';
 import {
@@ -53,7 +63,6 @@ import {
 import {
   DeleteUserDialogComponent
 } from './dialogs/delete-user-dialog/delete-user-dialog.component';
-import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -67,6 +76,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    FormsModule,
+    ReactiveFormsModule,
     MatTableModule,
     MatFormFieldModule,
     MatPaginatorModule,
@@ -76,7 +87,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatIconModule,
     MatSelectModule,
     MatDialogModule,
-    ReactiveFormsModule
+    MatCheckboxModule
   ],
   providers: [],
   bootstrap: [AppComponent]

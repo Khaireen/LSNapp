@@ -41,7 +41,8 @@ export class AddUserDialogComponent implements OnInit {
       username: '',
       firstName: '',
       lastName: '',
-      role: USER_ROLE.USER
+      role: USER_ROLE.USER,
+      enabled: false
     });
   }
 
