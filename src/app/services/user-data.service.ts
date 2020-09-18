@@ -12,7 +12,7 @@ import {
   providedIn: 'root'
 })
 export class UserDataService {
-  usersTable: User[];
+  private usersTable: User[];
 
   constructor() {
     this.usersTable = [{
@@ -82,11 +82,13 @@ export class UserDataService {
   }
 
   // Adds a user to an array od users
-  addUser(user: User): Promise < any > {
+  addUser(user: User): number {
     this.usersTable.push(user);
-    return new Promise(resolve => {
-      resolve(this.usersTable);
-    });
+
+    return this.usersTable.length;
+    // return new Promise(resolve => {
+    //   resolve(this.usersTable);
+    // });
   }
 
   // Modifies selected user
